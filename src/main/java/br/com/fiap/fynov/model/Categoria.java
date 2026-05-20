@@ -22,6 +22,9 @@ public class Categoria {
     @NotNull
     private String nmCategoria;
 
+    @Column(name = "tp_categoria")
+    private String tpCategoria;
+
     public Categoria() {}
 
     public Long getId() { return id; }
@@ -29,4 +32,7 @@ public class Categoria {
 
     public String getNmCategoria() { return nmCategoria; }
     public void setNmCategoria(String nmCategoria) { this.nmCategoria = nmCategoria; }
+
+    public String getTpCategoria() { return tpCategoria; }
+    public void setTpCategoria(String tpCategoria) { this.tpCategoria = tpCategoria; }
 }

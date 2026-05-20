@@ -16,6 +16,10 @@ public class CategoriaService {
         return categoriaRepository.findAll();
     }
 
+    public List<Categoria> findByTipos(List<String> tipos) {
+        return categoriaRepository.findByTpCategoriaIn(tipos);
+    }
+
     public Categoria findById(Long id) {
         return categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria nao encontrada com id: " + id));

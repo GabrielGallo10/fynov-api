@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import br.com.fiap.fynov.model.Categoria;
 import br.com.fiap.fynov.service.CategoriaService;
@@ -19,7 +20,10 @@ public class CategoriaController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Categoria> findAll() {
+    public List<Categoria> findAll(@RequestParam(required = false) List<String> tipos) {
+        if (tipos != null && !tipos.isEmpty()) {
+            return categoriaService.findByTipos(tipos);
+        }
         return categoriaService.findAll();
     }
 
