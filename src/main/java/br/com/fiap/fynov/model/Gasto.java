@@ -1,79 +1,64 @@
 package br.com.fiap.fynov.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Column;
-import java.math.BigDecimal;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 @Table(name = "t_fyn_gastos")
 public class Gasto {
+
     @Id
+    @Column(name = "cd_gasto")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GASTO")
     @SequenceGenerator(name = "SEQ_GASTO", sequenceName = "ISEQ$$_3934363", allocationSize = 1)
     private Long id;
-    
+
+    @Column(name = "cd_usuario")
+    @NotNull
+    private Long idUsuario;
+
     @Column(name = "cd_categoria")
     @NotNull
-    private Long cd_categoria;
+    @Positive
+    private Long cdCategoria;
 
     @Column(name = "ds_gasto")
     @NotNull
-    private String ds_gasto;
+    @Size(min = 1, max = 255)
+    private String dsGasto;
 
     @Column(name = "vl_gasto")
     @NotNull
-    private BigDecimal vl_gasto;
+    @DecimalMin(value = "0.01", message = "O valor do gasto deve ser maior que zero")
+    private BigDecimal vlGasto;
 
     @Column(name = "dt_gasto")
     @NotNull
-    private Date dt_gasto;
+    private Date dtGasto;
 
     public Gasto() {}
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
 
-    public Long getCdCategoria() {
-        return cd_categoria;
-    }
+    public Long getCdCategoria() { return cdCategoria; }
+    public void setCdCategoria(Long cdCategoria) { this.cdCategoria = cdCategoria; }
 
-    public void setCdCategoria(Long cd_categoria) {
-        this.cd_categoria = cd_categoria;
-    }
+    public String getDsGasto() { return dsGasto; }
+    public void setDsGasto(String dsGasto) { this.dsGasto = dsGasto; }
 
-    public String getDsGasto() {
-        return ds_gasto;
-    }
+    public BigDecimal getVlGasto() { return vlGasto; }
+    public void setVlGasto(BigDecimal vlGasto) { this.vlGasto = vlGasto; }
 
-    public void setDsGasto(String ds_gasto) {
-        this.ds_gasto = ds_gasto;
-    }
-
-    public BigDecimal getVlGasto() {
-        return vl_gasto;
-    }
-
-    public void setVlGasto(BigDecimal vl_gasto) {
-        this.vl_gasto = vl_gasto;
-    }
-
-    public Date getDtGasto() {
-        return dt_gasto;
-    }
-
-    public void setDtGasto(Date dt_gasto) {
-        this.dt_gasto = dt_gasto;
-    }
+    public Date getDtGasto() { return dtGasto; }
+    public void setDtGasto(Date dtGasto) { this.dtGasto = dtGasto; }
 }

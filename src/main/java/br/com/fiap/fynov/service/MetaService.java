@@ -1,50 +1,53 @@
 package br.com.fiap.fynov.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
+import br.com.fiap.fynov.config.SecurityUtils;
+import br.com.fiap.fynov.exception.ResourceNotFoundException;
 import br.com.fiap.fynov.model.Meta;
 import br.com.fiap.fynov.repository.MetaRepository;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class MetaService {
+
     @Autowired
     private MetaRepository metaRepository;
 
     public List<Meta> findAll() {
-        List<Meta> metas = metaRepository.findAll();
-        if (metas.isEmpty()) {
-            throw new RuntimeException("Não há metas cadastradas");
-        }
-        return metas;
+        return metaRepository.findAllByIdUsuario(SecurityUtils.getCurrentUserId());
     }
 
     public Meta findById(Long id) {
-        Optional<Meta> meta = metaRepository.findById(id);
-        if (meta.isPresent()) {
-            return meta.get();
-        }
-        throw new RuntimeException("Meta não encontrada");
+        return metaRepository.findByIdAndIdUsuario(id, SecurityUtils.getCurrentUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Meta nao encontrada com id: " + id));
     }
 
+    @Transactional
     public Meta create(Meta meta) {
+        meta.setIdUsuario(SecurityUtils.getCurrentUserId());
         return metaRepository.save(meta);
     }
 
+    @Transactional
     public Meta update(Long id, Meta meta) {
-        Optional<Meta> metaAtual = metaRepository.findById(id);
-        if (metaAtual.isPresent()) {
-            return metaRepository.save(meta);
+        Long userId = SecurityUtils.getCurrentUserId();
+        if (!metaRepository.existsByIdAndIdUsuario(id, userId)) {
+            throw new ResourceNotFoundException("Meta nao encontrada com id: " + id);
         }
-        throw new RuntimeException("Meta não encontrada para atualização");
+        meta.setId(id);
+        meta.setIdUsuario(userId);
+        return metaRepository.save(meta);
     }
-    
+
+    @Transactional
     public void delete(Long id) {
-        Optional<Meta> meta = metaRepository.findById(id);
-        if (meta.isPresent()) {
-            metaRepository.deleteById(id);
+        Long userId = SecurityUtils.getCurrentUserId();
+        if (!metaRepository.existsByIdAndIdUsuario(id, userId)) {
+            throw new ResourceNotFoundException("Meta nao encontrada com id: " + id);
         }
-        throw new RuntimeException("Meta não encontrada para exclusão");
+        metaRepository.deleteById(id);
     }
 }

@@ -1,50 +1,53 @@
 package br.com.fiap.fynov.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
+import br.com.fiap.fynov.config.SecurityUtils;
+import br.com.fiap.fynov.exception.ResourceNotFoundException;
 import br.com.fiap.fynov.model.Gasto;
 import br.com.fiap.fynov.repository.GastoRepository;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class GastoService {
+
     @Autowired
     private GastoRepository gastoRepository;
 
     public List<Gasto> findAll() {
-        List<Gasto> gastos = gastoRepository.findAll();
-        if (gastos.isEmpty()) {
-            throw new RuntimeException("Não há gastos cadastrados");
-        }
-        return gastos;
+        return gastoRepository.findAllByIdUsuario(SecurityUtils.getCurrentUserId());
     }
 
     public Gasto findById(Long id) {
-        Optional<Gasto> gasto = gastoRepository.findById(id);
-        if (gasto.isPresent()) {
-            return gasto.get();
-        }
-        throw new RuntimeException("Gasto não encontrado");
+        return gastoRepository.findByIdAndIdUsuario(id, SecurityUtils.getCurrentUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gasto nao encontrado com id: " + id));
     }
 
+    @Transactional
     public Gasto create(Gasto gasto) {
+        gasto.setIdUsuario(SecurityUtils.getCurrentUserId());
         return gastoRepository.save(gasto);
     }
 
+    @Transactional
     public Gasto update(Long id, Gasto gasto) {
-        Optional<Gasto> gastoAtual = gastoRepository.findById(id);
-        if (gastoAtual.isPresent()) {
-            return gastoRepository.save(gasto);
+        Long userId = SecurityUtils.getCurrentUserId();
+        if (!gastoRepository.existsByIdAndIdUsuario(id, userId)) {
+            throw new ResourceNotFoundException("Gasto nao encontrado com id: " + id);
         }
-        throw new RuntimeException("Gasto não encontrado para atualização");
+        gasto.setId(id);
+        gasto.setIdUsuario(userId);
+        return gastoRepository.save(gasto);
     }
-    
+
+    @Transactional
     public void delete(Long id) {
-        Optional<Gasto> gasto = gastoRepository.findById(id);
-        if (gasto.isPresent()) {
-            gastoRepository.deleteById(id);
+        Long userId = SecurityUtils.getCurrentUserId();
+        if (!gastoRepository.existsByIdAndIdUsuario(id, userId)) {
+            throw new ResourceNotFoundException("Gasto nao encontrado com id: " + id);
         }
-        throw new RuntimeException("Gasto não encontrado para exclusão");
+        gastoRepository.deleteById(id);
     }
 }
