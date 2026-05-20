@@ -10,4 +10,5 @@ public interface RecebimentoRepository extends JpaRepository<Recebimento, Long> 
     List<Recebimento> findAllByIdUsuario(Long idUsuario);
     Optional<Recebimento> findByIdAndIdUsuario(Long id, Long idUsuario);
     boolean existsByIdAndIdUsuario(Long id, Long idUsuario);
+    void deleteAllByIdUsuario(Long idUsuario);
 }

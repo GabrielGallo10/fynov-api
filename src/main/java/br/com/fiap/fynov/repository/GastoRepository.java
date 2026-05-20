@@ -10,4 +10,5 @@ public interface GastoRepository extends JpaRepository<Gasto, Long> {
     List<Gasto> findAllByIdUsuario(Long idUsuario);
     Optional<Gasto> findByIdAndIdUsuario(Long id, Long idUsuario);
     boolean existsByIdAndIdUsuario(Long id, Long idUsuario);
+    void deleteAllByIdUsuario(Long idUsuario);
 }

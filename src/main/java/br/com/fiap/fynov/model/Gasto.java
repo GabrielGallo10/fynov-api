@@ -1,5 +1,6 @@
 package br.com.fiap.fynov.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -20,13 +21,18 @@ public class Gasto {
     private Long id;
 
     @Column(name = "cd_usuario")
-    @NotNull
     private Long idUsuario;
 
     @Column(name = "cd_categoria")
     @NotNull
     @Positive
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long cdCategoria;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cd_categoria", insertable = false, updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Categoria categoria;
 
     @Column(name = "ds_gasto")
     @NotNull
@@ -52,6 +58,8 @@ public class Gasto {
 
     public Long getCdCategoria() { return cdCategoria; }
     public void setCdCategoria(Long cdCategoria) { this.cdCategoria = cdCategoria; }
+
+    public Categoria getCategoria() { return categoria; }
 
     public String getDsGasto() { return dsGasto; }
     public void setDsGasto(String dsGasto) { this.dsGasto = dsGasto; }
