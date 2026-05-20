@@ -16,7 +16,7 @@ import java.util.Date;
 public class Gasto {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GASTO")
-    @SequenceGenerator(name = "SEQ_GASTO", sequenceName = "ISEQ$$_3934359", allocationSize = 1)
+    @SequenceGenerator(name = "SEQ_GASTO", sequenceName = "ISEQ$$_3934363", allocationSize = 1)
     private Long id;
     
     @Column(name = "cd_categoria")
@@ -45,35 +45,35 @@ public class Gasto {
         this.id = id;
     }
 
-    public Long getCDCategoria() {
+    public Long getCdCategoria() {
         return cd_categoria;
     }
 
-    public void setCDCategoria(Long cd_categoria) {
+    public void setCdCategoria(Long cd_categoria) {
         this.cd_categoria = cd_categoria;
     }
 
-    public String getDSGasto() {
+    public String getDsGasto() {
         return ds_gasto;
     }
 
-    public void setDSGasto(String ds_gasto) {
+    public void setDsGasto(String ds_gasto) {
         this.ds_gasto = ds_gasto;
     }
 
-    public BigDecimal getVLGasto() {
+    public BigDecimal getVlGasto() {
         return vl_gasto;
     }
 
-    public void setVLGasto(BigDecimal vl_gasto) {
+    public void setVlGasto(BigDecimal vl_gasto) {
         this.vl_gasto = vl_gasto;
     }
 
-    public Date getDTGasto() {
+    public Date getDtGasto() {
         return dt_gasto;
     }
 
-    public void setDTGasto(Date dt_gasto) {
+    public void setDtGasto(Date dt_gasto) {
         this.dt_gasto = dt_gasto;
     }
 }
